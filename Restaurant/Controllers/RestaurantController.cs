@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Restaurant.Entities;
 using Restaurant.Models;
+using Restaurant.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,81 +11,56 @@ using System.Threading.Tasks;
 
 namespace Restaurant.Controllers
 {
-    public class RestaurantController : Controller
+    [Route("restaurant")]
+    public class RestaurantController : ControllerBase
     {
-        private static IList<CreateRestaurant> restaurants = new List<CreateRestaurant>()
+        private readonly IRestaurantService _restaurantService;
+        public RestaurantController(IRestaurantService restaurantService)
         {
-            new CreateRestaurant(){ Name = "Hut", Description = "Dobra", HasDelivery = true},
-            new CreateRestaurant(){ Name = "Dominium", Description = "Taka sobie", HasDelivery = false }
-        };
-
-        // GET: RestaurantController
-        public ActionResult Index()
-        {
-            return View(restaurants);
+            _restaurantService = restaurantService;
         }
 
-        // GET: RestaurantController/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
-        // GET: RestaurantController/Create
-        public ActionResult Create()
-        {
-            return View(new CreateRestaurant());
-        }
-
-        // POST: RestaurantController/Create
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(CreateRestaurant createRestaurant)
+        public ActionResult CreateCategory([FromBody] CreateCategoryDto dto)
         {
-            restaurants.Add(createRestaurant);
-            return RedirectToAction(nameof(Index));
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var name = _restaurantService.Create(dto);
+            return Created($"restaurant/{name}", null);
         }
 
-        // GET: RestaurantController/Edit/5
-        public ActionResult Edit(int id)
+        //[HttpPost]
+        //public ActionResult CreateDish([FromBody] CreateDishDto dto)
+        //{
+        //    var dish = _mapper.Map<Dish>(dto);
+        //    _dbContext.Dishes.Add(dish);
+        //    _dbContext.SaveChanges();
+
+        //    return Created($"restaurant/{dish.Category}/{dish.Name}", null);
+        //}
+
+        [HttpGet]
+        public ActionResult<IEnumerable<CategoryDto>> GetAllDishes()
         {
-            return View();
+            var dishesDtos = _restaurantService.GetAll();
+
+            return Ok(dishesDtos);
         }
 
-        // POST: RestaurantController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        [HttpGet("{name}")]
+        public ActionResult<Dish> GetDish([FromRoute] string name)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
+            var dish = _restaurantService.GetById(name);
 
-        // GET: RestaurantController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
+            if (dish is null)
+            {
+                return NotFound();
+            }
 
-        // POST: RestaurantController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            return Ok(dish);
         }
     }
 }
