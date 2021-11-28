@@ -15,9 +15,11 @@ namespace Restaurant.Controllers
     public class RestaurantController : ControllerBase
     {
         private readonly IRestaurantService _restaurantService;
-        public RestaurantController(IRestaurantService restaurantService)
+        private readonly IMapper _mapper;
+        public RestaurantController(IRestaurantService restaurantService, IMapper mapper)
         {
             _restaurantService = restaurantService;
+            _mapper = mapper;
         }
 
         [HttpPost]
@@ -28,19 +30,40 @@ namespace Restaurant.Controllers
                 return BadRequest(ModelState);
             }
 
-            var name = _restaurantService.Create(dto);
-            return Created($"restaurant/{name}", null);
+            var category = _restaurantService.Create(dto);
+            var create = _mapper.Map<Category>(category);
+            return Created($"restaurant/{create.Name}", null);
         }
 
-        //[HttpPost]
-        //public ActionResult CreateDish([FromBody] CreateDishDto dto)
-        //{
-        //    var dish = _mapper.Map<Dish>(dto);
-        //    _dbContext.Dishes.Add(dish);
-        //    _dbContext.SaveChanges();
+        [HttpPut("{id}")]
+        public ActionResult Update([FromBody] UpdateCategoryDto dto, [FromRoute] int id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
 
-        //    return Created($"restaurant/{dish.Category}/{dish.Name}", null);
-        //}
+            var isUpdated = _restaurantService.Update(dto, id);
+
+            if (!isUpdated)
+            {
+                return NotFound();
+            }
+            return Ok();
+        }
+
+        [HttpDelete("{id}")]
+        public ActionResult Delete([FromRoute] int id)
+        {
+            var isDeleted = _restaurantService.Delete(id);
+
+            if (isDeleted)
+            {
+                return NoContent();
+            }
+
+            return NotFound();
+        }
 
         [HttpGet]
         public ActionResult<IEnumerable<CategoryDto>> GetAllDishes()

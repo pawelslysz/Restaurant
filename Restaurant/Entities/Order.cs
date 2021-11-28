@@ -12,6 +12,9 @@ namespace Restaurant.Entities
         public DateTime DateOfOrder { get; set; }
 
         public int UserId { get; set; }
+        public int DishId { get; set; }
+
         public virtual User User { get; set; }
+        public virtual ICollection<Dish> Dishes { get; set; }
     }
 }

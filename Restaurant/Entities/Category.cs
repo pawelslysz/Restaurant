@@ -11,6 +11,6 @@ namespace Restaurant.Entities
         public string Name { get; set; }
         public string Picture { get; set; }
 
-        public virtual Dish Dishes{ get; set; }
+        public virtual ICollection<Dish> Dishes { get; set; } = new List<Dish>();
     }
 }

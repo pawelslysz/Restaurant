@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Restaurant.Entities;
 
 namespace Restaurant.Migrations
 {
     [DbContext(typeof(RestaurantDbContext))]
-    partial class RestaurantDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211127122129_Init3.2")]
+    partial class Init32
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -56,17 +58,12 @@ namespace Restaurant.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("OrderId")
-                        .HasColumnType("int");
-
                     b.Property<float>("Price")
                         .HasColumnType("real");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryId");
-
-                    b.HasIndex("OrderId");
 
                     b.ToTable("Dishes");
                 });
@@ -137,6 +134,9 @@ namespace Restaurant.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("DishId")
+                        .IsUnique();
 
                     b.HasIndex("UserId")
                         .IsUnique();
@@ -218,13 +218,7 @@ namespace Restaurant.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Restaurant.Entities.Order", "Order")
-                        .WithMany("Dishes")
-                        .HasForeignKey("OrderId");
-
                     b.Navigation("Category");
-
-                    b.Navigation("Order");
                 });
 
             modelBuilder.Entity("Restaurant.Entities.Employee", b =>
@@ -240,11 +234,19 @@ namespace Restaurant.Migrations
 
             modelBuilder.Entity("Restaurant.Entities.Order", b =>
                 {
+                    b.HasOne("Restaurant.Entities.Dish", "Dishes")
+                        .WithOne("Order")
+                        .HasForeignKey("Restaurant.Entities.Order", "DishId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Restaurant.Entities.User", "User")
                         .WithOne("Order")
                         .HasForeignKey("Restaurant.Entities.Order", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Dishes");
 
                     b.Navigation("User");
                 });
@@ -254,9 +256,9 @@ namespace Restaurant.Migrations
                     b.Navigation("Dishes");
                 });
 
-            modelBuilder.Entity("Restaurant.Entities.Order", b =>
+            modelBuilder.Entity("Restaurant.Entities.Dish", b =>
                 {
-                    b.Navigation("Dishes");
+                    b.Navigation("Order");
                 });
 
             modelBuilder.Entity("Restaurant.Entities.Position", b =>

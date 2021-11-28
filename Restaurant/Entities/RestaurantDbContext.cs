@@ -30,6 +30,10 @@ namespace Restaurant.Entities
             modelBuilder.Entity<Dish>()
                 .Property(d => d.Price)
                 .IsRequired();
+            modelBuilder.Entity<Dish>()
+                .HasOne(d => d.Category)
+                .WithMany(c => c.Dishes)
+                .HasForeignKey(d => d.CategoryId);
 
             modelBuilder.Entity<Employee>()
                 .Property(e => e.Name)

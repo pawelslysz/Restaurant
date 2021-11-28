@@ -5,14 +5,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Restaurant.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Restaurant.Services
 {
     public interface IRestaurantService
     {
-        string Create(CreateCategoryDto dto);
+        Category Create(CreateCategoryDto dto);
+        bool Delete(int id);
         IEnumerable<CategoryDto> GetAll();
         Dish GetById(string name);
+        bool Update(UpdateCategoryDto dto, int id);
     }
 
     public class RestaurantService : IRestaurantService
@@ -52,14 +55,52 @@ namespace Restaurant.Services
             return dishesDtos;
         }
 
-        public string Create(CreateCategoryDto dto)
+        public Category Create(CreateCategoryDto dto)
         {
-            var category = _mapper.Map<Category>(dto);
+            var category = new Category();
+            category.Name = dto.Name;
+            category.Picture = dto.Picture;
             _dbContext.Categories.Add(category);
             _dbContext.SaveChanges();
 
-            return category.Name;
+            return category;
         }
 
+        public bool Update(UpdateCategoryDto dto, int id)
+        {
+            var category = _dbContext
+                .Categories
+                .FirstOrDefault(c => c.Id == id);
+
+            if (category is null)
+                return false;
+
+            var dish = new Dish();
+
+            dish.Name = dto.DishName;
+            dish.Price = dto.DishPrice;
+            dish.Description = dto.DishDescription;
+
+            category.Dishes.Add(dish);
+
+            _dbContext.SaveChanges();
+            return true;
+        }
+
+        public bool Delete(int id)
+        {
+            var dish = _dbContext
+                .Dishes
+                .FirstOrDefault(d => d.Id == id);
+
+            if (dish is null)
+                return false;
+
+            _dbContext.Dishes.Remove(dish);
+            _dbContext.SaveChanges();
+
+            return true;
+        }
+        
     }
 }

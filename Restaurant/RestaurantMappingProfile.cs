@@ -15,13 +15,17 @@ namespace Restaurant
             CreateMap<Category, CategoryDto>();
             CreateMap<Dish, DishDto>();
 
-            CreateMap<CreateDishDto, Dish>()
-                .ForMember(m => m.Category, c => c.MapFrom(s => s.Category))
-                .ForMember(m => m.CategoryId, c => c.MapFrom(s => s.CategoryId));
+            CreateMap<CreateDishDto, Dish>();
+            //    .ForMember(m => m.Category, c => c.MapFrom(s => s.Category))
+            //    .ForMember(m => m.CategoryId, c => c.MapFrom(s => s.CategoryId));
 
-            CreateMap<CreateCategoryDto, Category>()
+            CreateMap<CategoryDto, Category>();
+            //    .ForMember(m => m.Dishes, c => c.MapFrom(dto => new Dish()
+              //      {Name = dto.DishName, Price = dto.DishPrice, Description = dto.DishDescription}));
+
+            CreateMap<UpdateCategoryDto, Category>()
                 .ForMember(m => m.Dishes, c => c.MapFrom(dto => new Dish()
-                    {Name = dto.DishName, Price = dto.DishPrice, Description = dto.DishDescription}));
+                { Name = dto.DishName, Price = dto.DishPrice, Description = dto.DishDescription }));
         }
     }
 }
