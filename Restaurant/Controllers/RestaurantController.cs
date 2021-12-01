@@ -65,6 +65,7 @@ namespace Restaurant.Controllers
             return NotFound();
         }
 
+        [Route("menu")]
         [HttpGet]
         public ActionResult<IEnumerable<CategoryDto>> GetAllDishes()
         {

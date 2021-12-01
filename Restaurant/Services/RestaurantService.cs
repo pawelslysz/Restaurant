@@ -13,7 +13,7 @@ namespace Restaurant.Services
     {
         Category Create(CreateCategoryDto dto);
         bool Delete(int id);
-        IEnumerable<CategoryDto> GetAll();
+        IEnumerable<DishDto> GetAll();
         Dish GetById(string name);
         bool Update(UpdateCategoryDto dto, int id);
     }
@@ -44,13 +44,13 @@ namespace Restaurant.Services
             return result;
         }
 
-        public IEnumerable<CategoryDto> GetAll()
+        public IEnumerable<DishDto> GetAll()
         {
             var dishes = _dbContext
-                .Categories
+                .Dishes
                 .ToList();
 
-            var dishesDtos = _mapper.Map<List<CategoryDto>>(dishes);
+            var dishesDtos = _mapper.Map<List<DishDto>>(dishes);
 
             return dishesDtos;
         }
