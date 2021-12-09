@@ -22,6 +22,7 @@ namespace Restaurant.Controllers
             _mapper = mapper;
         }
 
+        [Route("menu")]
         [HttpPost]
         public ActionResult CreateCategory([FromBody] CreateCategoryDto dto)
         {
@@ -35,15 +36,15 @@ namespace Restaurant.Controllers
             return Created($"restaurant/{create.Name}", null);
         }
 
-        [HttpPut("{id}")]
-        public ActionResult Update([FromBody] UpdateCategoryDto dto, [FromRoute] int id)
+        [HttpPut("menu")]
+        public ActionResult Update([FromBody] UpdateCategoryDto dto)//, [FromRoute] int id)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest();
             }
 
-            var isUpdated = _restaurantService.Update(dto, id);
+            var isUpdated = _restaurantService.Update(dto);//, id);
 
             if (!isUpdated)
             {

@@ -12,6 +12,5 @@ namespace Restaurant.Models
         public float Price { get; set; }
         public string Description { get; set; }
 
-        
     }
 }

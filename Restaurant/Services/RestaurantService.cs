@@ -15,7 +15,7 @@ namespace Restaurant.Services
         bool Delete(int id);
         IEnumerable<DishDto> GetAll();
         Dish GetById(string name);
-        bool Update(UpdateCategoryDto dto, int id);
+        bool Update(UpdateCategoryDto dto);//, int id);
     }
 
     public class RestaurantService : IRestaurantService
@@ -66,20 +66,21 @@ namespace Restaurant.Services
             return category;
         }
 
-        public bool Update(UpdateCategoryDto dto, int id)
+        public bool Update(UpdateCategoryDto dto)//, int id)
         {
             var category = _dbContext
                 .Categories
-                .FirstOrDefault(c => c.Id == id);
+                .FirstOrDefault(c => c.Name == dto.Category);
 
             if (category is null)
                 return false;
 
-            var dish = new Dish();
-
-            dish.Name = dto.DishName;
-            dish.Price = dto.DishPrice;
-            dish.Description = dto.DishDescription;
+            var dish = new Dish
+            {
+                Name = dto.Name,
+                Price = dto.Price,
+                Description = dto.Description
+            };
 
             category.Dishes.Add(dish);
 
