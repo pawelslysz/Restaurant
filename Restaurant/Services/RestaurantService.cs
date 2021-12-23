@@ -11,11 +11,12 @@ namespace Restaurant.Services
 {
     public interface IRestaurantService
     {
-        Category Create(CreateCategoryDto dto);
+        //Category Create(CreateCategoryDto dto);
         bool Delete(int id);
         IEnumerable<DishDto> GetAll();
         Dish GetById(string name);
-        bool Update(UpdateCategoryDto dto);//, int id);
+        bool Create(UpdateCategoryDto dto);
+        bool Update(UpdateCategoryDto dto);
     }
 
     public class RestaurantService : IRestaurantService
@@ -55,22 +56,22 @@ namespace Restaurant.Services
             return dishesDtos;
         }
 
-        public Category Create(CreateCategoryDto dto)
-        {
-            var category = new Category();
-            category.Name = dto.Name;
-            category.Picture = dto.Picture;
-            _dbContext.Categories.Add(category);
-            _dbContext.SaveChanges();
+        //public Category Create(CreateCategoryDto dto)
+        //{
+        //    var category = new Category();
+        //    category.Name = dto.Name;
+        //    category.Picture = dto.Picture;
+        //    _dbContext.Categories.Add(category);
+        //    _dbContext.SaveChanges();
 
-            return category;
-        }
+        //    return category;
+        //}
 
-        public bool Update(UpdateCategoryDto dto)//, int id)
+        public bool Create(UpdateCategoryDto dto)//, int id)
         {
             var category = _dbContext
                 .Categories
-                .FirstOrDefault(c => c.Name == dto.Category);
+                .FirstOrDefault(c => c.Name == dto.CategoryName);
 
             if (category is null)
                 return false;
@@ -79,10 +80,29 @@ namespace Restaurant.Services
             {
                 Name = dto.Name,
                 Price = dto.Price,
-                Description = dto.Description
+                Description = dto.Description,
+                CategoryName = dto.CategoryName
             };
 
             category.Dishes.Add(dish);
+
+            _dbContext.SaveChanges();
+            return true;
+        }
+
+        public bool Update(UpdateCategoryDto dto)
+        {
+            var dish = _dbContext
+                .Dishes
+                .FirstOrDefault(c => c.Id == dto.Id);
+
+            if (dish is null)
+                return false;
+            
+            dish.Name = dto.Name;
+            dish.Price = dto.Price;
+            dish.Description = dto.Description;
+            dish.CategoryName = dto.CategoryName;
 
             _dbContext.SaveChanges();
             return true;
@@ -92,7 +112,7 @@ namespace Restaurant.Services
         {
             var dish = _dbContext
                 .Dishes
-                .FirstOrDefault(d => d.Id == id);
+                .FirstOrDefault(d => d.Id == id );
 
             if (dish is null)
                 return false;

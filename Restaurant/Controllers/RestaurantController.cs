@@ -11,40 +11,46 @@ using System.Threading.Tasks;
 
 namespace Restaurant.Controllers
 {
-    [Route("restaurant")]
+    [Route("restaurant/menu")]
     public class RestaurantController : ControllerBase
     {
         private readonly IRestaurantService _restaurantService;
         private readonly IMapper _mapper;
+
         public RestaurantController(IRestaurantService restaurantService, IMapper mapper)
         {
             _restaurantService = restaurantService;
             _mapper = mapper;
         }
 
-        [Route("menu")]
+
         [HttpPost]
-        public ActionResult CreateCategory([FromBody] CreateCategoryDto dto)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var category = _restaurantService.Create(dto);
-            var create = _mapper.Map<Category>(category);
-            return Created($"restaurant/{create.Name}", null);
-        }
-
-        [HttpPut("menu")]
-        public ActionResult Update([FromBody] UpdateCategoryDto dto)//, [FromRoute] int id)
+        public ActionResult Create([FromBody] UpdateCategoryDto dto)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest();
             }
 
-            var isUpdated = _restaurantService.Update(dto);//, id);
+            var isCreated = _restaurantService.Create(dto);
+
+            if (!isCreated)
+            {
+                return NotFound();
+            }
+            return Ok();
+        }
+
+
+        [HttpPut]
+        public ActionResult Update([FromBody] UpdateCategoryDto dto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
+            var isUpdated = _restaurantService.Update(dto);
 
             if (!isUpdated)
             {
@@ -52,6 +58,7 @@ namespace Restaurant.Controllers
             }
             return Ok();
         }
+
 
         [HttpDelete("{id}")]
         public ActionResult Delete([FromRoute] int id)
@@ -66,7 +73,7 @@ namespace Restaurant.Controllers
             return NotFound();
         }
 
-        [Route("menu")]
+
         [HttpGet]
         public ActionResult<IEnumerable<CategoryDto>> GetAllDishes()
         {

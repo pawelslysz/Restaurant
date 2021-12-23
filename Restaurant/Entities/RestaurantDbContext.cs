@@ -33,7 +33,7 @@ namespace Restaurant.Entities
             modelBuilder.Entity<Dish>()
                 .HasOne(d => d.Category)
                 .WithMany(c => c.Dishes)
-                .HasForeignKey(d => d.CategoryId);
+                .HasForeignKey(d => d.CategoryName);
 
             modelBuilder.Entity<Employee>()
                 .Property(e => e.Name)
