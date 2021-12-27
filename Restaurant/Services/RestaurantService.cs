@@ -14,7 +14,7 @@ namespace Restaurant.Services
         //Category Create(CreateCategoryDto dto);
         bool Delete(int id);
         IEnumerable<DishDto> GetAll();
-        Dish GetById(string name);
+        //Dish GetById(string name);
         bool Create(UpdateCategoryDto dto);
         bool Update(UpdateCategoryDto dto);
     }
@@ -30,20 +30,20 @@ namespace Restaurant.Services
             _mapper = mapper;
         }
 
-        public Dish GetById(string name)
-        {
-            var dish = _dbContext
-                .Dishes
-                .FirstOrDefault(d => d.Name == name);
+        //public Dish GetById(string name)
+        //{
+        //    var dish = _dbContext
+        //        .Dishes
+        //        .FirstOrDefault(d => d.Name == name);
 
-            if (dish is null)
-            {
-                return null;
-            }
+        //    if (dish is null)
+        //    {
+        //        return null;
+        //    }
 
-            var result = dish;
-            return result;
-        }
+        //    var result = dish;
+        //    return result;
+        //}
 
         public IEnumerable<DishDto> GetAll()
         {
@@ -55,17 +55,6 @@ namespace Restaurant.Services
 
             return dishesDtos;
         }
-
-        //public Category Create(CreateCategoryDto dto)
-        //{
-        //    var category = new Category();
-        //    category.Name = dto.Name;
-        //    category.Picture = dto.Picture;
-        //    _dbContext.Categories.Add(category);
-        //    _dbContext.SaveChanges();
-
-        //    return category;
-        //}
 
         public bool Create(UpdateCategoryDto dto)//, int id)
         {

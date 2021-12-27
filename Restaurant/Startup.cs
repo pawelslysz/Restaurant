@@ -33,6 +33,7 @@ namespace Restaurant
             services.AddDbContext<RestaurantDbContext>();
             services.AddAutoMapper(this.GetType().Assembly);
             services.AddScoped<IRestaurantService, RestaurantService>();
+            services.AddScoped<ICategoryService, CategoryService>();
 
             //Enable CORS
             services.AddCors(c =>

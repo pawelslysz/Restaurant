@@ -82,17 +82,17 @@ namespace Restaurant.Controllers
             return Ok(dishesDtos);
         }
 
-        [HttpGet("{name}")]
-        public ActionResult<Dish> GetDish([FromRoute] string name)
-        {
-            var dish = _restaurantService.GetById(name);
+        //[HttpGet("{name}")]
+        //public ActionResult<Dish> GetDish([FromRoute] string name)
+        //{
+        //    var dish = _restaurantService.GetById(name);
 
-            if (dish is null)
-            {
-                return NotFound();
-            }
+        //    if (dish is null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            return Ok(dish);
-        }
+        //    return Ok(dish);
+        //}
     }
 }

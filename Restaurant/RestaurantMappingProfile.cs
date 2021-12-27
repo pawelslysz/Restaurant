@@ -13,6 +13,7 @@ namespace Restaurant
         public RestaurantMappingProfile()
         {
             CreateMap<Category, CategoryDto>();
+            CreateMap<CategoryDto, Category>();
             CreateMap<Dish, DishDto>();
 
             CreateMap<CreateDishDto, Dish>();

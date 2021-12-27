@@ -6,22 +6,57 @@ using System.Linq;
 using System.Threading.Tasks;
 using Restaurant.Services;
 using Restaurant.Entities;
+using Restaurant.Models;
 
 namespace Restaurant.Controllers
 {
     [Route("restaurant/categories")]
-    public class CategoryController
+    public class CategoryController : ControllerBase
     {
-        private ICategoryService _categoryService;
+        private readonly ICategoryService _categoryService;
+        private readonly IMapper _mapper;
 
-        public CategoryController(ICategoryService categoryService)
+        public CategoryController(ICategoryService categoryService, IMapper mapper)
         {
             _categoryService = categoryService;
+            _mapper = mapper;
         }
 
+        [HttpPut]
+        public ActionResult Update([FromBody] CategoryDto dto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
+            var isUpdated = _categoryService.Update(dto);
+
+            if (!isUpdated)
+            {
+                return NotFound();
+            }
+            return Ok();
+        }
+        [HttpPost]
+        public ActionResult Create([FromBody] CategoryDto dto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
+            var isCreated = _categoryService.Create(dto);
+
+            if (!isCreated)
+            {
+                return NotFound();
+            }
+            return Ok();
+        }
 
         [HttpGet]
-        public Action<IEnumerable<Category>> GetAllCategories()
+        public ActionResult<IEnumerable<Category>> GetAllCategories()
         {
             var categories = _categoryService.Get();
 
