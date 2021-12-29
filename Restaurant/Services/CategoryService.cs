@@ -10,6 +10,7 @@ namespace Restaurant.Services
 {
     public interface ICategoryService
     {
+        bool Delete(string name);
         bool Update(CategoryDto dto);
         bool Create(CategoryDto dto);
         IEnumerable<Category> Get();
@@ -25,21 +26,41 @@ namespace Restaurant.Services
             _mapper = mapper;
         }
 
-        public bool Update(CategoryDto dto)
+        public bool Delete(string name)
         {
-           // var categoryDto = _dbContext
-             //   .Categories
-               // .FirstOrDefault(c => c.Id == dto.Id);
+            var category = _dbContext
+                .Categories
+                .FirstOrDefault(c => c.Name == name);
 
-            var category = new Category
+            if (category is null)
+                return false;
+
+            foreach (var dish in _dbContext.Dishes)
             {
-                Name = dto.Name,
-                Description = dto.Description
-            };
-
-            _dbContext.Categories.Add(category);
+                if (dish.CategoryName == name)
+                    _dbContext.Dishes.Remove(dish);
+            }
+            
+            _dbContext.Categories.Remove(category);
             _dbContext.SaveChanges();
 
+            return true;
+        }
+
+        public bool Update(CategoryDto dto)
+        {
+            // var categoryDto = _dbContext
+            //   .Categories
+            // .FirstOrDefault(c => c.Id == dto.Id);
+
+            var category = _dbContext
+                .Categories
+                .FirstOrDefault(c => c.Name == dto.Name);
+
+            category.Description = dto.Description;
+            category.Picture = dto.Picture;
+
+            _dbContext.SaveChanges();
             return true;
         }
 
@@ -48,7 +69,8 @@ namespace Restaurant.Services
             var category = new Category
             {
                 Name = dto.Name,
-                Description = dto.Description
+                Description = dto.Description,
+                Picture = dto.Picture
             };
 
             _dbContext.Categories.Add(category);

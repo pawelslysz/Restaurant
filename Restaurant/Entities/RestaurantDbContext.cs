@@ -56,6 +56,10 @@ namespace Restaurant.Entities
             modelBuilder.Entity<Order>()
                 .Property(o => o.Price)
                 .IsRequired();
+            modelBuilder.Entity<Order>()
+                .HasMany(o => o.Dishes)
+                .WithMany(d => d.Orders)
+                .UsingEntity(t => t.ToTable("OrderDish"));
 
             modelBuilder.Entity<Position>()
                 .Property(p => p.Name)

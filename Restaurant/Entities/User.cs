@@ -18,6 +18,6 @@ namespace Restaurant.Entities
         public string Email { get; set; }
         public bool IsAdmin { get; set; }
 
-        public virtual Order Order { get; set; }
+        //public virtual Order Order { get; set; }
     }
 }

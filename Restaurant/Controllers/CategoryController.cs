@@ -22,6 +22,19 @@ namespace Restaurant.Controllers
             _mapper = mapper;
         }
 
+        [HttpDelete("{name}")]
+        public ActionResult Delete([FromRoute] string name)
+        {
+            var isDeleted = _categoryService.Delete(name);
+
+            if (isDeleted)
+            {
+                return NoContent();
+            }
+
+            return NotFound();
+        }
+
         [HttpPut]
         public ActionResult Update([FromBody] CategoryDto dto)
         {

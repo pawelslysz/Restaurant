@@ -14,6 +14,6 @@ namespace Restaurant.Entities
 
         public string CategoryName { get; set; }
         public virtual Category Category { get; set; }
-        public virtual Order Order { get; set; }
+        public virtual ICollection<Order> Orders { get; set; }
     }
 }

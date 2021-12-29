@@ -34,6 +34,7 @@ namespace Restaurant
             services.AddAutoMapper(this.GetType().Assembly);
             services.AddScoped<IRestaurantService, RestaurantService>();
             services.AddScoped<ICategoryService, CategoryService>();
+            services.AddScoped<IOrderService, OrderService>();
 
             //Enable CORS
             services.AddCors(c =>
