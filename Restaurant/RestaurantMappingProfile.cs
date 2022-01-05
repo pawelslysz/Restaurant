@@ -27,6 +27,10 @@ namespace Restaurant
             CreateMap<UpdateCategoryDto, Category>()
                 .ForMember(m => m.Dishes, c => c.MapFrom(dto => new Dish()
                 { Name = dto.Name, Price = dto.Price, Description = dto.Description }));
+
+            CreateMap<Order, OrderDto>();
+
+            CreateMap<Dish, DishOrderDto>();
         }
     }
 }
