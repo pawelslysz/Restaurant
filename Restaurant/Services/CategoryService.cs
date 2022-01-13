@@ -66,6 +66,16 @@ namespace Restaurant.Services
 
         public bool Create(CategoryDto dto)
         {
+            var allCategories = _dbContext
+                .Categories
+                .ToList();
+
+            foreach (var categories in allCategories)
+            {
+                if (categories.Name == dto.Name)
+                    return false;
+            }
+
             var category = new Category
             {
                 Name = dto.Name,

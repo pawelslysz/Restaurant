@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Restaurant.Services
 {
-    public interface IRestaurantService
+    public interface IDishService
     {
         //Category Create(CreateCategoryDto dto);
         bool Delete(int id);
@@ -17,46 +17,21 @@ namespace Restaurant.Services
         //Dish GetById(string name);
         bool Create(UpdateCategoryDto dto);
         bool Update(UpdateCategoryDto dto);
+        IEnumerable<DishDto> GetByCategory(string categoryName);
     }
 
-    public class RestaurantService : IRestaurantService
+    public class DishService : IDishService
     {
         private readonly RestaurantDbContext _dbContext;
         private readonly IMapper _mapper;
 
-        public RestaurantService(RestaurantDbContext dbContext, IMapper mapper)
+        public DishService(RestaurantDbContext dbContext, IMapper mapper)
         {
             _dbContext = dbContext;
             _mapper = mapper;
         }
 
-        //public Dish GetById(string name)
-        //{
-        //    var dish = _dbContext
-        //        .Dishes
-        //        .FirstOrDefault(d => d.Name == name);
-
-        //    if (dish is null)
-        //    {
-        //        return null;
-        //    }
-
-        //    var result = dish;
-        //    return result;
-        //}
-
-        public IEnumerable<DishDto> GetAll()
-        {
-            var dishes = _dbContext
-                .Dishes
-                .ToList();
-
-            var dishesDtos = _mapper.Map<List<DishDto>>(dishes);
-
-            return dishesDtos;
-        }
-
-        public bool Create(UpdateCategoryDto dto)//, int id)
+        public bool Create(UpdateCategoryDto dto)
         {
             var category = _dbContext
                 .Categories
@@ -111,6 +86,30 @@ namespace Restaurant.Services
 
             return true;
         }
-        
+
+        public IEnumerable<DishDto> GetAll()
+        {
+            var dishes = _dbContext
+                .Dishes
+                .ToList();
+
+            var dishesDtos = _mapper.Map<List<DishDto>>(dishes);
+
+            return dishesDtos;
+        }
+
+        public IEnumerable<DishDto> GetByCategory(string categoryName)
+        {
+            var dishes = new List<Dish>();
+            foreach (var dish in _dbContext.Dishes)
+            {
+                if (dish.CategoryName == categoryName)
+                    dishes.Add(dish);
+            }
+
+            var dishesDtos = _mapper.Map<List<DishDto>>(dishes);
+
+            return dishesDtos;
+        }
     }
 }

@@ -63,13 +63,13 @@ namespace Restaurant.Controllers
 
             if (!isCreated)
             {
-                return NotFound();
+                return BadRequest();
             }
             return Ok();
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<Category>> GetAllCategories()
+        public ActionResult<IEnumerable<Category>> Get()
         {
             var categories = _categoryService.Get();
 

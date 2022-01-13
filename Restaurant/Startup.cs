@@ -32,7 +32,7 @@ namespace Restaurant
             services.AddControllersWithViews();
             services.AddDbContext<RestaurantDbContext>();
             services.AddAutoMapper(this.GetType().Assembly);
-            services.AddScoped<IRestaurantService, RestaurantService>();
+            services.AddScoped<IDishService, DishService>();
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<IOrderService, OrderService>();
 

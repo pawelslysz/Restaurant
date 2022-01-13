@@ -14,6 +14,9 @@ namespace Restaurant.Services
         bool Delete(int id);
         bool Create(Dish dish);
         IEnumerable<OrderDto> Get();
+        IEnumerable<OrderDto> GetForUser();
+        bool Update(Dish dish);
+        bool UpdateIsOrdered(int id);
     }
     public class OrderService : IOrderService
     {
@@ -41,6 +44,36 @@ namespace Restaurant.Services
             return true;
         }
 
+        public bool Update(Dish dish)
+        {
+            var theDish = _dbContext
+                .Dishes
+                .FirstOrDefault(d => d.Id == dish.Id);
+
+            var order = _dbContext
+                .Orders
+                .OrderByDescending(o => o.Id)
+                .FirstOrDefault();
+
+            order.Dishes.Add(theDish);
+            order.Price += dish.Price;
+
+            _dbContext.SaveChanges();
+
+            return true;
+        }
+
+        public bool UpdateIsOrdered(int id)
+        {
+            var thisOrder = _dbContext
+                .Orders
+                .FirstOrDefault(o => o.Id == id);
+            thisOrder.IsOrdered = true;
+
+            _dbContext.SaveChanges();
+            return true;
+        }
+
         public bool Create(Dish dish)
         {
             var theDish = _dbContext
@@ -65,9 +98,26 @@ namespace Restaurant.Services
             var orders = _dbContext
                 .Orders
                 .Include(o => o.Dishes)
+                .Where(o => o.IsOrdered==true)
                 .ToList();
+
             var ordersDtos = _mapper.Map<List<OrderDto>>(orders);
+
             return ordersDtos;
         }
+
+        public IEnumerable<OrderDto> GetForUser()
+        {
+            var orders = _dbContext
+                .Orders
+                .Include(o => o.Dishes)
+                .ToList();
+
+
+            var ordersDtos = _mapper.Map<List<OrderDto>>(orders);
+
+            return ordersDtos;
+        }
+
     }
 }

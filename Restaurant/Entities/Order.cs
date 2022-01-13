@@ -10,6 +10,7 @@ namespace Restaurant.Entities
         public int Id { get; set; }
         public float Price { get; set; }
         public DateTime DateOfOrder { get; set; }
+        public bool IsOrdered { get; set; }
 
         //public int UserId { get; set; }
 

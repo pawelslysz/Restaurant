@@ -33,7 +33,36 @@ namespace Restaurant.Controllers
             }
 
             return NotFound();
+        }
+
+        [HttpPut]
+        public ActionResult Update([FromBody] Dish dish)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
             }
+
+            var isUpdated = _orderService.Update(dish);
+
+            if (!isUpdated)
+            {
+                return NotFound();
+            }
+            return Ok();
+        }
+
+        [HttpPatch]
+        public ActionResult UpdateIsOrdered([FromBody] int id)
+        {
+            var isUpdated = _orderService.UpdateIsOrdered(id);
+
+            if (!isUpdated)
+            {
+                return NotFound();
+            }
+            return Ok();
+        }
 
         [HttpPost]
         public ActionResult Create([FromBody] Dish dish)
@@ -59,5 +88,15 @@ namespace Restaurant.Controllers
 
             return Ok(orders);
         }
+
+        [Route("list")]
+        [HttpGet]
+        public ActionResult<IEnumerable<OrderDto>> GetForUser()
+        {
+            var orders = _orderService.GetForUser();
+
+            return Ok(orders);
+        }
+
     }
 }

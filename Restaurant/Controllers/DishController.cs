@@ -12,14 +12,14 @@ using System.Threading.Tasks;
 namespace Restaurant.Controllers
 {
     [Route("restaurant/menu")]
-    public class RestaurantController : ControllerBase
+    public class DishController : ControllerBase
     {
-        private readonly IRestaurantService _restaurantService;
+        private readonly IDishService _dishService;
         private readonly IMapper _mapper;
 
-        public RestaurantController(IRestaurantService restaurantService, IMapper mapper)
+        public DishController(IDishService dishService, IMapper mapper)
         {
-            _restaurantService = restaurantService;
+            _dishService = dishService;
             _mapper = mapper;
         }
 
@@ -32,7 +32,7 @@ namespace Restaurant.Controllers
                 return BadRequest();
             }
 
-            var isCreated = _restaurantService.Create(dto);
+            var isCreated = _dishService.Create(dto);
 
             if (!isCreated)
             {
@@ -50,7 +50,7 @@ namespace Restaurant.Controllers
                 return BadRequest();
             }
 
-            var isUpdated = _restaurantService.Update(dto);
+            var isUpdated = _dishService.Update(dto);
 
             if (!isUpdated)
             {
@@ -63,7 +63,7 @@ namespace Restaurant.Controllers
         [HttpDelete("{id}")]
         public ActionResult Delete([FromRoute] int id)
         {
-            var isDeleted = _restaurantService.Delete(id);
+            var isDeleted = _dishService.Delete(id);
 
             if (isDeleted)
             {
@@ -77,22 +77,19 @@ namespace Restaurant.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<CategoryDto>> GetAllDishes()
         {
-            var dishesDtos = _restaurantService.GetAll();
+            var dishesDtos = _dishService.GetAll();
 
             return Ok(dishesDtos);
         }
 
-        //[HttpGet("{name}")]
-        //public ActionResult<Dish> GetDish([FromRoute] string name)
-        //{
-        //    var dish = _restaurantService.GetById(name);
+        [Route("list/{categoryName}")]
+        [HttpGet]
+        public ActionResult<IEnumerable<DishDto>> GetDishesByCategory([FromRoute] string categoryName)
+        {
+            var dishesDtos = _dishService.GetByCategory(categoryName);
 
-        //    if (dish is null)
-        //    {
-        //        return NotFound();
-        //    }
+            return Ok(dishesDtos);
+        }
 
-        //    return Ok(dish);
-        //}
     }
 }
