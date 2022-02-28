@@ -11,10 +11,8 @@ namespace Restaurant.Services
 {
     public interface IDishService
     {
-        //Category Create(CreateCategoryDto dto);
         bool Delete(int id);
         IEnumerable<DishDto> GetAll();
-        //Dish GetById(string name);
         bool Create(UpdateCategoryDto dto);
         bool Update(UpdateCategoryDto dto);
         IEnumerable<DishDto> GetByCategory(string categoryName);
@@ -39,6 +37,16 @@ namespace Restaurant.Services
 
             if (category is null)
                 return false;
+
+            var allDishes = _dbContext
+                .Dishes
+                .ToList();
+
+            foreach (var dishes in allDishes)
+            {
+                if (dishes.Name == dto.Name)
+                    return false;
+            }
 
             var dish = new Dish
             {

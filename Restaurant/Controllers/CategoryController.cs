@@ -51,6 +51,7 @@ namespace Restaurant.Controllers
             }
             return Ok();
         }
+
         [HttpPost]
         public ActionResult Create([FromBody] CategoryDto dto)
         {

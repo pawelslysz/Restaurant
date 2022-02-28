@@ -55,6 +55,12 @@ namespace Restaurant.Services
                 .OrderByDescending(o => o.Id)
                 .FirstOrDefault();
 
+            foreach (var thisDish in order.Dishes)
+            {
+                if (thisDish == theDish)
+                    return false;
+            }
+
             order.Dishes.Add(theDish);
             order.Price += dish.Price;
 

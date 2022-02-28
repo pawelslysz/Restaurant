@@ -9,6 +9,7 @@ namespace Restaurant.Models
     {
         public int Id { get; set; }
         public float Price { get; set; }
+        public bool IsOrdered { get; set; }
         public List<DishOrderDto> Dishes { get; set; }
     }
 }

@@ -49,10 +49,6 @@ namespace Restaurant.Services
 
         public bool Update(CategoryDto dto)
         {
-            // var categoryDto = _dbContext
-            //   .Categories
-            // .FirstOrDefault(c => c.Id == dto.Id);
-
             var category = _dbContext
                 .Categories
                 .FirstOrDefault(c => c.Name == dto.Name);
